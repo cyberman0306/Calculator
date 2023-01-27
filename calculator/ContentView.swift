@@ -7,7 +7,14 @@
 
 import SwiftUI
 
+private let buttonCodeVertical: [[String]] = [
+    ["C", "±", "%", "÷"],
+    ["7", "8", "9", "x"],
+    ["4", "5", "6", "-"],
+    ["1", "2", "3", "+"],
+    ["0", "0", ",", "="],
 
+]
 enum Buttontype {
     case first, second, third, fourth, fifth, sixth, seventh, eighth, nineth, zero
     case dot, equal, plus, minus, multiple, devide
@@ -82,6 +89,12 @@ enum Buttontype {
 }
 
 struct ContentView: View {
+    @State private var result: String = "0"
+    
+    func inputToken(token: String) {
+        result += token
+    }
+    
     
     @State private var totalNumber: String = "0"
     @State private var PreviousResult: String = "0" //결과값 저장
@@ -109,121 +122,143 @@ struct ContentView: View {
                 Spacer()
                 HStack{
                     Spacer()
-                    Text(PreviousResult)
-                        .padding()
-                        .font(.system(size: 25))
-                        .foregroundColor(.white)
-                }
-                HStack {
-                    Spacer()
-                    Text(RealtimeResult)
-                        .padding()
-                        .font(.system(size: 53))
-                        .foregroundColor(.white)
-                }
-                HStack{
-                    Spacer()
-                    Text(totalNumber)
+                    Text(result)
                         .padding()
                         .font(.system(size: 73))
                         .foregroundColor(.white)
                 }
-                    
-                ForEach(buttonData, id: \.self)  { line in
+                
+                
+                // Leeo version 230126
+//                HStack {
+//                    Spacer()
+//                    Text(RealtimeResult)
+//                        .padding()
+//                        .font(.system(size: 53))
+//                        .foregroundColor(.white)
+//                }
+//                HStack{
+//                    Spacer()
+//                    Text(totalNumber)
+//                        .padding()
+//                        .font(.system(size: 73))
+//                        .foregroundColor(.white)
+//                }
+                
+                ForEach(Array(buttonCodeVertical.enumerated()), id: \.offset) { vIdx, line in
                     HStack {
-                        ForEach(line, id: \.self) { item in
-                            Button {
-                                if ItisEmpty { // 현재 입력 공간에 아무것도 없을때
-                                    if item == .clear ||
-                                        item == .plus ||
-                                        item == .minus ||
-                                        item == .multiple ||
-                                        item == .devide ||
-                                        item == .opposite ||
-                                        item == .percent ||
-                                        item == .equal { // 입력없이 연산자를 누를떄 무반응
-                                        ItisEmpty = true
-                                    } else { // 첫번쨰 숫자 저장 및 디스플레이
-                                        ItisEmpty = false
-                                        if operatorType != .clear {
-                                            totalNumber = item.ButtonDisplayname
-                                            after_Number = Int(totalNumber) ?? 0
-                                            //
-                                            if operatorType == .plus {
-                                                RealtimeResult = String(first_Number + after_Number)
-                                            } else if operatorType == .multiple {
-                                                RealtimeResult = String(first_Number * after_Number)
-                                            } else if operatorType == .minus {
-                                                RealtimeResult = String(first_Number - after_Number)
-                                            }
-                                            //
-                                        } else {
-                                            totalNumber = item.ButtonDisplayname
-                                        }
-                                    }
-                                } else { // 두번째 입력
-                                    if item == .clear {
-                                        first_Number = 0
-                                        totalNumber = "0"
-                                        after_Number = 0
-                                        PreviousResult = "0"
-                                        RealtimeResult = "0"
-                                        ItisEmpty = true
-                                    } else if item == .plus {
-                                        first_Number = Int(totalNumber) ?? 0
-                                        operatorType = .plus
-                                        totalNumber += "+"
-                                        ItisEmpty = true
-                                        print(first_Number)
-                                    } else if item == .multiple {
-                                        first_Number = Int(totalNumber) ?? 0
-                                        operatorType = .multiple
-                                        totalNumber += "X"
-                                        ItisEmpty = true
-                                    } else if item == .minus {
-                                        first_Number = Int(totalNumber) ?? 0
-                                        operatorType = .minus
-                                        totalNumber += "-"
-                                        ItisEmpty = true
-                                    } else if item == .opposite {
-                                        print(totalNumber)
-                                        tempNumber = Int(totalNumber) ?? 0
-                                        tempNumber *= -1
-                                        print(tempNumber)
-                                        totalNumber = String(tempNumber)
-                                    }
-                                    
-                                    else if item == .equal {
-                                          if operatorType == .plus ||
-                                             operatorType == .multiple ||
-                                             operatorType == .minus {
-                                              totalNumber = RealtimeResult
-                                              RealtimeResult = "0"
-                                          }
-                                        first_Number = Int(totalNumber) ?? 0
-                                        PreviousResult = totalNumber
-                                        }
- 
-                                       else {
-                                           totalNumber += item.ButtonDisplayname
-                                           if operatorType != .clear {
-                                               after_Number = Int(totalNumber) ?? 0
-                                           }
-
-                                       }
-                                }
-                            } label: {
-                                Text(item.ButtonDisplayname)
-                                    .frame(width: calculateButtonWidth(button: item),
-                                           height: calculateButtonHeight(button: item))
-                                    .background(item.backgroundColor)
+                        let hLast = line.count - 1
+                        ForEach(Array(line.enumerated()), id: \.offset) { hIdx, buttonTitle in
+                            Button(action: {inputToken(token: buttonTitle)}) {
+                                Text(buttonTitle)
+                                    .frame(width: 80, height: 80)
+                                    .background(hIdx == hLast ? .orange :
+                                                    vIdx == 0 ? .gray : . secondary)
                                     .cornerRadius(40)
-                                    .foregroundColor(item.forgroundColor)
+                                    .foregroundColor(.white)
                                     .font(.system(size: 33))
                             }
                         }
                     }
                 }
+                .padding()
+                
+                // Leeo version 230126
+//                ForEach(buttonData, id: \.self)  { line in
+//                    HStack {
+//                        ForEach(line, id: \.self) { item in
+//                            Button {
+//                                if ItisEmpty { // 현재 입력 공간에 아무것도 없을때
+//                                    if item == .clear ||
+//                                        item == .plus ||
+//                                        item == .minus ||
+//                                        item == .multiple ||
+//                                        item == .devide ||
+//                                        item == .opposite ||
+//                                        item == .percent ||
+//                                        item == .equal { // 입력없이 연산자를 누를떄 무반응
+//                                        ItisEmpty = true
+//                                    } else { // 첫번쨰 숫자 저장 및 디스플레이
+//                                        ItisEmpty = false
+//                                        if operatorType != .clear {
+//                                            totalNumber = item.ButtonDisplayname
+//                                            after_Number = Int(totalNumber) ?? 0
+//                                            //
+//                                            if operatorType == .plus {
+//                                                RealtimeResult = String(first_Number + after_Number)
+//                                            } else if operatorType == .multiple {
+//                                                RealtimeResult = String(first_Number * after_Number)
+//                                            } else if operatorType == .minus {
+//                                                RealtimeResult = String(first_Number - after_Number)
+//                                            }
+//                                            //
+//                                        } else {
+//                                            totalNumber = item.ButtonDisplayname
+//                                        }
+//                                    }
+//                                } else { // 두번째 입력
+//                                    if item == .clear {
+//                                        first_Number = 0
+//                                        totalNumber = "0"
+//                                        after_Number = 0
+//                                        PreviousResult = "0"
+//                                        RealtimeResult = "0"
+//                                        ItisEmpty = true
+//                                    } else if item == .plus {
+//                                        first_Number = Int(totalNumber) ?? 0
+//                                        operatorType = .plus
+//                                        totalNumber += "+"
+//                                        ItisEmpty = true
+//                                        print(first_Number)
+//                                    } else if item == .multiple {
+//                                        first_Number = Int(totalNumber) ?? 0
+//                                        operatorType = .multiple
+//                                        totalNumber += "X"
+//                                        ItisEmpty = true
+//                                    } else if item == .minus {
+//                                        first_Number = Int(totalNumber) ?? 0
+//                                        operatorType = .minus
+//                                        totalNumber += "-"
+//                                        ItisEmpty = true
+//                                    } else if item == .opposite {
+//                                        print(totalNumber)
+//                                        tempNumber = Int(totalNumber) ?? 0
+//                                        tempNumber *= -1
+//                                        print(tempNumber)
+//                                        totalNumber = String(tempNumber)
+//                                    }
+//
+//                                    else if item == .equal {
+//                                          if operatorType == .plus ||
+//                                             operatorType == .multiple ||
+//                                             operatorType == .minus {
+//                                              totalNumber = RealtimeResult
+//                                              RealtimeResult = "0"
+//                                          }
+//                                        first_Number = Int(totalNumber) ?? 0
+//                                        PreviousResult = totalNumber
+//                                        }
+//
+//                                       else {
+//                                           totalNumber += item.ButtonDisplayname
+//                                           if operatorType != .clear {
+//                                               after_Number = Int(totalNumber) ?? 0
+//                                           }
+//
+//                                       }
+//                                }
+//                            } label: {
+//                                Text(item.ButtonDisplayname)
+//                                    .frame(width: calculateButtonWidth(button: item),
+//                                           height: calculateButtonHeight(button: item))
+//                                    .background(item.backgroundColor)
+//                                    .cornerRadius(40)
+//                                    .foregroundColor(item.forgroundColor)
+//                                    .font(.system(size: 33))
+//                            }
+//                        }
+//                    }
+//                }
                 
             }
         }

@@ -14,6 +14,7 @@
 		E48BF54129417338008B2E3C /* calculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48BF54029417338008B2E3C /* calculatorTests.swift */; };
 		E48BF54B29417338008B2E3C /* calculatorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48BF54A29417338008B2E3C /* calculatorUITests.swift */; };
 		E48BF54D29417338008B2E3C /* calculatorUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48BF54C29417338008B2E3C /* calculatorUITestsLaunchTests.swift */; };
+		F35EC5A22983AE5900CECE3D /* CalculatorBrain.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35EC5A12983AE5900CECE3D /* CalculatorBrain.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 		E48BF54629417338008B2E3C /* calculatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = calculatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E48BF54A29417338008B2E3C /* calculatorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = calculatorUITests.swift; sourceTree = "<group>"; };
 		E48BF54C29417338008B2E3C /* calculatorUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = calculatorUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		F35EC5A12983AE5900CECE3D /* CalculatorBrain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorBrain.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +100,7 @@
 				E48BF53129417337008B2E3C /* ContentView.swift */,
 				E48BF53329417338008B2E3C /* Assets.xcassets */,
 				E48BF53529417338008B2E3C /* Preview Content */,
+				F35EC5A12983AE5900CECE3D /* CalculatorBrain.swift */,
 			);
 			path = calculator;
 			sourceTree = "<group>";
@@ -257,6 +260,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F35EC5A22983AE5900CECE3D /* CalculatorBrain.swift in Sources */,
 				E48BF53229417337008B2E3C /* ContentView.swift in Sources */,
 				E48BF53029417337008B2E3C /* calculatorApp.swift in Sources */,
 			);
