@@ -24,7 +24,7 @@ class CalculatorModel: ObservableObject {
         ["7", "8", "9", "×"],
         ["4", "5", "6", "-"],
         ["1", "2", "3", "+"],
-        ["0", ",", "="],
+        ["0", ".", "="],
     ]
     private let buttonCodeHorizontal: [[String]] = [
         ["(",   ")",    "mc",   "m+",   "m-",   "mr",   "C",    "±",    "%",    "÷"],
@@ -87,7 +87,7 @@ class CalculatorModel: ObservableObject {
     private var accumulator: Double?
     
     private func performOperation(_ symbol: String) {
-        if let operation = operations[symbol] {
+        if let operation = operations[symbol] { // 문자를 받아서 operations 함수에 넣어줌
             switch operation {
             case .unaryOperation(let function):
                 if accumulator != nil {
@@ -133,3 +133,5 @@ class CalculatorModel: ObservableObject {
     }
     
 }
+
+//nil 값 정리를 위해 C를 enum Operation을 하나더 만들고 nil 값 초기화 부분을 넣어주는게 좋다

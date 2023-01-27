@@ -43,11 +43,12 @@ struct ContentView: View {
                                     .cornerRadius(40)
                                     .foregroundColor(.white)
                                     .font(.system(size: 33))
+                                    
                             }
                         }
                     }
                 }
-                .padding()
+                .padding(1)
                 
             }
         }
