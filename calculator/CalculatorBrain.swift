@@ -7,17 +7,25 @@
 
 import Foundation
 
+//func changeSign(operand: Double) -> Double {
+//    return -operand
+//}
+
+//func multiply(op1: Double, op2: Double) -> Double {
+//    return op1 * op2
+//}
+
 class CalculatorModel: ObservableObject {
     
     @Published var displayValue: String = "0"
     
     private let buttonCodeVertical: [[String]] = [
         ["C", "±", "%", "÷"],
-        ["7", "8", "9", "x"],
+        ["7", "8", "9", "×"],
         ["4", "5", "6", "-"],
         ["1", "2", "3", "+"],
         ["0", ",", "="],
-]
+    ]
     private let buttonCodeHorizontal: [[String]] = [
         ["(",   ")",    "mc",   "m+",   "m-",   "mr",   "C",    "±",    "%",    "÷"],
         ["2nd", "x²",   "x³",   "xʸ",   "eˣ",   "10ˣ",  "7",    "8",    "9",    "×"],
@@ -26,6 +34,22 @@ class CalculatorModel: ObservableObject {
         ["Rad", "sinh", "cosh", "tanh", "pi",   "Rand", "0",    "0",    ".",    "="]
     ]
     
+    private enum Operation {
+        case unaryOperation ( (Double) -> Double)
+        case binaryOperation((Double, Double) -> Double)
+        case equals
+    }
+    
+    private var operations: Dictionary<String, Operation> = [
+        "C" : Operation.unaryOperation({$0 * 0}),
+        "±" : Operation.unaryOperation({-$0}),
+        "%" : Operation.unaryOperation({$0 / 100.0}),
+        "×" : Operation.binaryOperation({$0 * $1}),
+        "-" : Operation.binaryOperation({$0 - $1}),
+        "+" : Operation.binaryOperation({$0 + $1}),
+        "÷" : Operation.binaryOperation({$0 / $1}),
+        "=" : Operation.equals
+    ]
     func getButtonCodeList() -> [[String]] {
         return buttonCodeVertical
     }
@@ -41,7 +65,10 @@ class CalculatorModel: ObservableObject {
                 userIsInTheMiddleOfTyping = false
             }
             performOperation(input)
-            displayValue = String(result)
+            if let value = result {
+                displayValue = String(value)
+            }
+           
         }
     }
     
@@ -59,20 +86,50 @@ class CalculatorModel: ObservableObject {
     
     private var accumulator: Double?
     
-    private func performOperation(_ symbol:String) {
-        userIsInTheMiddleOfTyping = false
+    private func performOperation(_ symbol: String) {
+        if let operation = operations[symbol] {
+            switch operation {
+            case .unaryOperation(let function):
+                if accumulator != nil {
+                    accumulator = function(accumulator!)
+                }
+            case .binaryOperation(let function):
+                if accumulator != nil {
+                    pbo = PendingBinaryOperation(function: function, firstOperand: accumulator!)
+                    accumulator = nil
+                }
+            case .equals:
+                performPendingbinaryOperation()
+            }
+        }
     }
     
     private func setOperand(operand: Double) {
         accumulator = operand
     }
     
-    private var result: Double {
+    private var result: Double? {
         get {
-            return accumulator!
+            return accumulator
         }
     }
     
+    private var pbo: PendingBinaryOperation?
     
+    private func performPendingbinaryOperation() {
+        if let pend = pbo, let accum = accumulator {
+            accumulator = pend.perform(with: accum)
+            pbo = nil
+        }
+    }
+    
+    private struct PendingBinaryOperation {
+        let function: (Double, Double) -> Double
+        let firstOperand : Double
+        
+        func perform(with secondOperand: Double) -> Double {
+            return function(firstOperand, secondOperand)
+        }
+    }
     
 }

@@ -10,13 +10,11 @@ import SwiftUI
 struct ContentView: View {
     
     @ObservedObject private var brain: CalculatorModel = CalculatorModel()
-    
     @State private var result: String = "0"
     
     func inputToken(token: String) {
         brain.inputToken(input: token)
     }
-    
     
     var body: some View {
         ZStack {
@@ -33,15 +31,13 @@ struct ContentView: View {
                         .minimumScaleFactor(0.5)
                 }
                 
-                
-                
                 ForEach(Array(brain.getButtonCodeList().enumerated()), id: \.offset) { vIdx, line in
                     HStack {
                         let hLast = line.count - 1
                         ForEach(Array(line.enumerated()), id: \.offset) { hIdx, buttonTitle in
                             Button(action: {inputToken(token: buttonTitle)}) {
                                 Text(buttonTitle)
-                                    .frame(width: 80, height: 80)
+                                    .frame(width: (buttonTitle == "0" ? 170 : 80), height: 80)
                                     .background(hIdx == hLast ? .orange :
                                                     vIdx == 0 ? .gray : . secondary)
                                     .cornerRadius(40)
