@@ -83,7 +83,7 @@ enum Buttontype {
 
 struct ContentView: View {
     
-    @State private var totalNumber: String = "0" //결과값 저장
+    @State private var totalNumber: String = "0"
     @State private var PreviousResult: String = "0" //결과값 저장
     @State private var RealtimeResult: String = "0" //결과값 저장
     @State var tempNumber: Int = 0 // 계산용
